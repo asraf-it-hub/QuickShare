@@ -14,11 +14,11 @@ export default function Receive() {
 
   const handleChange = (index, value) => {
     if (!/^[0-9]*$/.test(value)) return;
-    
+
     const newPin = [...pin];
     newPin[index] = value.substring(value.length - 1);
     setPin(newPin);
-    
+
     // Auto focus next input
     if (value && index < 5 && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1].focus();
@@ -54,8 +54,10 @@ export default function Receive() {
     setLoading(true);
     setError('');
 
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     try {
-      const response = await axios.get(`http://localhost:5000/api/receive/${fullPin}`);
+      const response = await axios.get(`${apiUrl}/api/receive/${fullPin}`);
       setData(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'PIN not found or has expired.');
@@ -79,7 +81,7 @@ export default function Receive() {
       </Link>
 
       <div className="max-w-xl mx-auto mt-16 z-10 relative">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
@@ -118,7 +120,7 @@ export default function Receive() {
               </div>
 
               {error && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-[var(--error)]/10 border border-[var(--error)]/50 text-[var(--error)] p-3 rounded-lg mb-6 text-sm text-center"
@@ -127,8 +129,8 @@ export default function Receive() {
                 </motion.div>
               )}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={loading || pin.join('').length !== 6}
                 className="w-full bg-[#22C55E] hover:bg-[#16a34a] text-white font-medium py-4 rounded-xl flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-[0_0_20px_rgba(34,197,94,0.4)]"
               >
@@ -148,7 +150,7 @@ export default function Receive() {
                   <div className="bg-black/30 rounded-xl p-4 text-[var(--text-main)] min-h-[100px] whitespace-pre-wrap font-mono text-sm">
                     {data.text}
                   </div>
-                  <button 
+                  <button
                     onClick={handleCopyText}
                     className="absolute top-5 right-6 text-[var(--text-muted)] hover:text-white transition-colors p-2"
                   >
@@ -168,9 +170,9 @@ export default function Receive() {
                       {(data.file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
-                  
-                  <a 
-                    href={`http://localhost:5000${data.file.downloadUrl}`} 
+
+                  <a
+                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${data.file.downloadUrl}`}
                     download={data.file.originalname}
                     className="flex-shrink-0 bg-[var(--primary)] hover:bg-[var(--primary-dark)] p-3 rounded-full glow-effect transition-colors"
                   >
@@ -179,7 +181,7 @@ export default function Receive() {
                 </div>
               )}
 
-              <button 
+              <button
                 onClick={() => { setData(null); setPin(['', '', '', '', '', '']); setError(''); }}
                 className="mt-4 px-6 py-2 rounded-full border border-[var(--glass-border)] hover:bg-[var(--glass)] transition-colors self-center text-sm"
               >

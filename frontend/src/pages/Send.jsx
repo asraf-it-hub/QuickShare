@@ -35,8 +35,10 @@ export default function Send() {
     if (text.trim()) formData.append('text', text);
     if (file) formData.append('file', file);
 
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
     try {
-      const response = await axios.post('http://localhost:5000/api/share', formData, {
+      const response = await axios.post(`${apiUrl}/api/share`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -56,7 +58,7 @@ export default function Send() {
       </Link>
 
       <div className="max-w-xl mx-auto mt-16 z-10 relative">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
@@ -86,7 +88,7 @@ export default function Send() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-[var(--text-muted)]">Secret Message (Optional)</label>
-                  <textarea 
+                  <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder="Type something..."
@@ -96,7 +98,7 @@ export default function Send() {
 
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium text-[var(--text-muted)]">File Attachment (Optional)</label>
-                  
+
                   {!file ? (
                     <label className="border-2 border-dashed border-[var(--glass-border)] rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-[var(--primary)] hover:bg-[var(--primary)]/5 transition-all group">
                       <UploadCloud className="w-8 h-8 text-[var(--text-muted)] group-hover:text-[var(--primary)] mb-3 transition-colors" />
@@ -116,8 +118,8 @@ export default function Send() {
                   )}
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading || (!text.trim() && !file)}
                   className="w-full glow-btn text-white font-medium py-4 rounded-xl flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -134,13 +136,13 @@ export default function Send() {
             >
               <div className="absolute inset-0 bg-[var(--primary)]/5 pointer-events-none" />
               <div className="absolute -top-32 -left-32 w-64 h-64 bg-[var(--primary)]/20 rounded-full blur-[100px] pointer-events-none" />
-              
+
               <h3 className="text-xl text-[var(--text-muted)] mb-2 relative z-10">Your Code Is Ready</h3>
               <p className="text-sm text-[var(--text-muted)]/70 mb-8 relative z-10 max-w-xs mx-auto">
                 Share this PIN with the receiver. This data will be automatically deleted in 10 minutes.
               </p>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
@@ -149,7 +151,7 @@ export default function Send() {
                 {pin}
               </motion.div>
 
-              <button 
+              <button
                 onClick={() => { setPin(null); setText(''); setFile(null); }}
                 className="px-6 py-2 rounded-full border border-[var(--glass-border)] hover:bg-[var(--glass)] transition-colors relative z-10"
               >

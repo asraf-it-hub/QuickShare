@@ -40,8 +40,8 @@ const upload = multer({ storage });
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pinshare';
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log(`MongoDB connected to ${MONGODB_URI}`))
-  .catch(err => console.error('MongoDB connection error. Please ensure MongoDB is running or provide a valid MONGODB_URI in backend/.env.', err.message));
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => console.error('MongoDB connection error:', err.message));
 
 // Route: POST /api/share
 app.post('/api/share', upload.single('file'), async (req, res) => {
